@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity 0.8.17;
 
 contract Faucet {
     address payable public owner;
@@ -18,6 +18,10 @@ contract Faucet {
     function withdrawAll() public onlyOwner {
         (bool sent, ) = owner.call{value: address(this).balance}("");
         require(sent, "Failed to send Ether");
+    }
+
+    function getBalance() public view returns (uint faucetBalance) {
+        faucetBalance = address(this).balance;
     }
 
     function destroyFaucet() public onlyOwner {

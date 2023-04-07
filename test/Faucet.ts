@@ -9,7 +9,8 @@ import { solidity } from 'ethereum-waffle';
 import chai, { expect, assert } from 'chai';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
-const { getContractFactory, getContractAt, getSigners, utils } = ethers;
+const { getContractFactory, providers, getSigners, utils } = ethers,
+    { JsonRpcProvider } = providers;
 chai.use(solidity);
 
 const contractName = 'Faucet';
@@ -125,6 +126,9 @@ describe(contractName, (): void => {
                 .destroyFaucet();
             await destroy.wait();
             await expect(faucet.connect(owner).getBalance()).to.be.reverted;
+            expect(await owner.provider?.getCode(faucet.address)).be.equal(
+                '0x'
+            );
         });
     });
 });
